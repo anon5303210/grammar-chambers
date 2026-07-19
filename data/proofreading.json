@@ -1,0 +1,121 @@
+{
+  "items": [
+    { "id": "PR001", "title": "Procedural history — retaliation suit", "function": "procedural history", "difficulty": 1,
+      "tokens": ["Delgado", "sued", "Ashford", "County", "in", "2023,", "alleging", "retaliation", "under", "Title", "VII.", "The", "county", "moved", "to", "dismiss,", "the", "district", "court", "granted", "the", "motion", "in", "part.", "A", "panel", "of", "this", "Court", "affirmed", "the", "dismissal", "of", "the", "retaliation", "claim,", "but", "the", "set", "of", "remaining", "claims", "were", "remanded", "for", "discovery.", "The", "parties", "completed", "discovery", "last", "spring."],
+      "errors": [
+        { "at": 15, "token": "dismiss,", "ruleId": "COMMA.SPLICE", "choices": ["dismiss;", "dismiss,", "dismiss —"], "answer": 0, "explanation": "“The county moved to dismiss” and “the district court granted…” are both independent clauses — a bare comma splices them. The semicolon is the clean repair." },
+        { "at": 42, "token": "were", "ruleId": "AGREE.INTERVENE", "choices": ["was", "were", "have been"], "answer": 0, "explanation": "The subject is “the set” — singular — not “claims.” The intervening “of remaining claims” is the trap." }
+      ] },
+    { "id": "PR002", "title": "Standard of review — summary judgment", "function": "standard of review", "difficulty": 1,
+      "tokens": ["We", "review", "a", "grant", "of", "summary", "judgment", "de", "novo,", "viewing", "the", "evidence", "in", "the", "light", "most", "favorable", "to", "the", "nonmoving", "party.", "Under", "that", "standard,", "summary", "judgment", "is", "proper", "only", "if", "no", "genuine", "dispute", "of", "material", "fact", "exists.", "In", "Hartwell,", "this", "Court", "holds", "that", "a", "scintilla", "of", "evidence", "is", "not", "enough;", "the", "dispute", "must", "be", "genuine."],
+      "errors": [
+        { "at": 41, "token": "holds", "ruleId": "CONV.TENSE", "choices": ["held", "holds", "would hold"], "answer": 0, "explanation": "What a court did in a specific past case takes the past tense: “In Hartwell, this Court held.” (The rule Hartwell announced may be stated in the present — “Hartwell requires more” — but the act of deciding is past.)" }
+      ] },
+    { "id": "PR003", "title": "Factual background — safety report", "function": "factual background", "difficulty": 2,
+      "tokens": ["Rojas", "began", "working", "at", "the", "Meridian", "plant", "in", "2016.", "Two", "years", "later,", "she", "reported", "a", "series", "of", "safety", "violations", "to", "the", "county", "inspector,", "who", "confirmed", "them", "after", "an", "unannounced", "site", "visit.", "The", "company,", "which", "had", "passed", "every", "prior", "inspection,", "placed", "Rojas", "on", "administrative", "leave", "the", "following", "week.", "Its", "stated", "reason", "was", "a", "staffing", "shortage."],
+      "errors": [] },
+    { "id": "PR004", "title": "Statutory analysis — three showings", "function": "statutory analysis", "difficulty": 2,
+      "tokens": ["The", "Act", "requires", "three", "showings:", "(1)", "that", "the", "employer", "knew", "of", "the", "violation;", "(2)", "that", "the", "employee", "reported", "it", "in", "good", "faith;", "and", "(3)", "if", "the", "report", "caused", "the", "adverse", "action.", "The", "provision", "which", "governs", "causation", "borrows", "from", "tort", "law,", "and", "it's", "reach", "is", "broad.", "Congress", "amended", "the", "section", "in", "2019", "without", "disturbing", "the", "causation", "standard."],
+      "errors": [
+        { "at": 24, "token": "if", "ruleId": "PARA.SERIES", "choices": ["that", "if", "whether"], "answer": 0, "explanation": "The enumeration runs “(1) that… (2) that… (3) if” — the third item must keep the series’ opener: “that.” Enumerations make parallelism visible, and breaks conspicuous." },
+        { "at": 33, "token": "which", "ruleId": "COMMA.THATWHICH", "choices": ["that", "which", "which,"], "answer": 0, "explanation": "The clause identifies WHICH provision — restrictive — so “that,” with no comma. Judge Grant’s prose contains no restrictive “which.”" },
+        { "at": 41, "token": "it's", "ruleId": "PRON.ITS", "choices": ["its", "it's", "its'"], "answer": 0, "explanation": "Possessive “its” — no apostrophe. “It’s” only ever means “it is.”" }
+      ] },
+    { "id": "PR005", "title": "Party arguments — county's response", "function": "party arguments", "difficulty": 2,
+      "tokens": ["The", "county", "makes", "two", "arguments", "in", "response.", "First,", "it", "contends", "that", "neither", "the", "emails", "nor", "the", "timeline", "support", "an", "inference", "of", "retaliation.", "Second,", "it", "argues", "that", "the", "transfer", "did", "not", "effect", "the", "terms", "of", "Rojas's", "employment", "because", "her", "salary", "and", "title", "stayed", "the", "same.", "Rojas", "counters", "that", "the", "transfer", "doubled", "her", "commute", "and", "halved", "her", "responsibilities."],
+      "errors": [
+        { "at": 17, "token": "support", "ruleId": "AGREE.NEITHER", "choices": ["supports", "support", "supported"], "answer": 0, "explanation": "With neither/nor, the verb follows the NEARER subject — here “the timeline,” singular: supports. (Had the order been “neither the timeline nor the emails,” the plural would win.)" },
+        { "at": 30, "token": "effect", "ruleId": "WORD.AFFECT", "choices": ["affect", "effect", "effectuate"], "answer": 0, "explanation": "To influence the terms = AFFECT. (And note “Rojas's” nearby is correct house style — nothing to fix there.)" }
+      ] },
+    { "id": "PR006", "title": "Application — pretext analysis", "function": "application", "difficulty": 2,
+      "tokens": ["Applying", "these", "principles,", "the", "record", "forecloses", "the", "county's", "reading.", "The", "inspector's", "report,", "Rojas'", "sworn", "declaration,", "and", "the", "emails", "between", "supervisors", "all", "point", "the", "same", "direction.", "A", "reasonable", "jury", "could", "find", "that", "the", "stated", "reason", "was", "pretext,", "and", "the", "county", "offers", "nothing", "to", "blunt", "that", "inference."],
+      "errors": [
+        { "at": 3, "len": 3, "token": "the record forecloses", "ruleId": "MOD.DANGLING", "choices": ["we conclude that the record forecloses", "the record forecloses", "the record, foreclosing"], "answer": 0, "explanation": "“Applying these principles” dangles — the record isn’t applying anything. The main clause must supply the actor doing the applying: “Applying these principles, we conclude…”" },
+        { "at": 12, "token": "Rojas'", "ruleId": "POSS.SINGULAR", "choices": ["Rojas's", "Rojas'", "Rojas"], "answer": 0, "explanation": "Singular name ending in s takes ’s — Rojas's. Grant’s corpus is unbroken on this (Jones's, Arias's, Reynolds's)." }
+      ] },
+    { "id": "PR007", "title": "Statutory interpretation — clean text", "function": "statutory analysis", "difficulty": 3,
+      "tokens": ["We", "start,", "as", "always,", "with", "the", "text.", "The", "statute", "makes", "it", "unlawful", "to", "“knowingly", "transport”", "a", "protected", "specimen", "across", "state", "lines,", "and", "it", "defines", "“specimen”", "broadly.", "But", "the", "government's", "reading", "would", "sweep", "in", "conduct", "that", "Congress's", "chosen", "verb", "cannot", "bear.", "Neither", "the", "structure", "nor", "the", "history", "supports", "that", "result;", "the", "neighboring", "provisions", "all", "regulate", "commercial", "dealers,", "not", "hobbyists."],
+      "errors": [] },
+    { "id": "PR008", "title": "Conclusion — reversal", "function": "remedy and conclusion", "difficulty": 2,
+      "tokens": ["The", "sum", "of", "it", "is", "this:", "the", "county", "identified", "a", "legitimate", "reason,", "but", "Rojas", "produced", "enough", "evidence—including", "the", "inspector's", "timeline,", "to", "let", "a", "jury", "decide", "whether", "that", "reason", "was", "pretext.", "We", "therefore", "reverse", "the", "grant", "of", "summary", "judgment", "and", "remand", "for", "trial."],
+      "errors": [
+        { "at": 19, "token": "timeline,", "ruleId": "PUNCT.DASH", "choices": ["timeline—", "timeline,", "timeline;"], "answer": 0, "explanation": "The aside opened with an em dash (“—including”) must CLOSE with one: “evidence—including the inspector's timeline—to let a jury decide.” A comma can’t close a dash." }
+      ] },
+    { "id": "PR009", "title": "Factual background — traffic stop", "function": "factual background", "difficulty": 2,
+      "tokens": ["Officers", "stopped", "Vance's", "truck", "outside", "Macon", "after", "a", "tip", "from", "a", "confidential", "informant.", "Inside,", "they", "found", "14", "cartons", "of", "untaxed", "cigarettes", "and", "a", "ledger", "listing", "buyers", "in", "three", "states.", "Vance", "told", "the", "officers", "that", "the", "cartons", "had", "laid", "untouched", "in", "the", "truck", "for", "weeks.", "The", "ledger", "told", "a", "different", "story:", "deliveries", "every", "few", "days,", "each", "one", "logged", "in", "Vance's", "own", "hand."],
+      "errors": [
+        { "at": 16, "token": "14", "ruleId": "CONV.NUMBERS", "choices": ["fourteen", "14", "forteen"], "answer": 0, "explanation": "House style spells out numbers through one hundred in ordinary prose — “fourteen cartons” (Grant: “ninety-four travelers”). Numerals stay for money, dates, and statutes." },
+        { "at": 37, "token": "laid", "ruleId": "WORD.LIELAY", "choices": ["lain", "laid", "layed"], "answer": 0, "explanation": "No object → lie, lay, LAIN: “the cartons had lain untouched.” “Laid” needs something being placed." }
+      ] },
+    { "id": "PR010", "title": "Jurisdiction — finality", "function": "jurisdiction", "difficulty": 2,
+      "tokens": ["Before", "reaching", "the", "merits,", "we", "must", "assure", "ourselves", "of", "jurisdiction.", "The", "Commission", "argues", "that", "their", "order", "is", "not", "final", "because", "the", "reconsideration", "process", "remains", "open.", "But", "the", "statute", "defines", "a", "final", "order", "as", "one", "that", "“disposes", "of", "all", "issues”.", "The", "order", "here", "left", "nothing", "undecided,", "and", "the", "Commission", "cited", "no", "authority", "holding", "otherwise."],
+      "errors": [
+        { "at": 14, "token": "their", "ruleId": "PRON.NUMBER", "choices": ["its", "their", "it's"], "answer": 0, "explanation": "The Commission is an institutional singular — “its order.” (And note “assure ourselves” earlier is correct: you assure a person. Nothing to fix there.)" },
+        { "at": 38, "token": "issues”.", "ruleId": "PUNCT.QUOTE", "choices": ["issues.”", "issues”.", "issues,”"], "answer": 0, "explanation": "American style: the period goes INSIDE the closing quotation mark — “disposes of all issues.”" }
+      ] },
+    { "id": "PR011", "title": "First Amendment — content based, clean", "function": "application", "difficulty": 3,
+      "tokens": ["Not", "every", "restriction", "on", "speech", "is", "content", "based.", "But", "this", "one", "is.", "The", "policy", "singles", "out", "“political”", "banners", "for", "removal", "while", "leaving", "commercial", "banners", "in", "place,", "and", "the", "district", "manager", "conceded", "that", "enforcement", "turns", "on", "the", "banner's", "message.", "That", "concession", "decides", "the", "question.", "Strict", "scrutiny", "applies,", "and", "the", "county", "has", "not", "tried", "to", "satisfy", "it."],
+      "errors": [] },
+    { "id": "PR012", "title": "ERISA — the exclusion question", "function": "party arguments", "difficulty": 2,
+      "tokens": ["The", "plan", "administrator,", "Finch", "Benefits", "says", "the", "exclusion", "applies.", "The", "principle", "question,", "then,", "is", "whether", "the", "roster", "of", "exclusions", "in", "the", "plan", "documents", "cover", "an", "injury", "sustained", "during", "a", "paid", "stunt.", "Finch", "reads", "the", "exclusion", "broadly;", "the", "district", "court", "read", "it", "the", "same", "way."],
+      "errors": [
+        { "at": 4, "token": "Benefits", "ruleId": "COMMA.APPOSITIVE", "choices": ["Benefits,", "Benefits", "Benefits;"], "answer": 0, "explanation": "The appositive naming the administrator needs BOTH commas: “The plan administrator, Finch Benefits, says…” The opening comma is there; the closing one went missing." },
+        { "at": 10, "token": "principle", "ruleId": "WORD.PRINCIPAL", "choices": ["principal", "principle", "principled"], "answer": 0, "explanation": "Main = PRINCIPAL (adjective). “Principle” is only ever a noun." },
+        { "at": 23, "token": "cover", "ruleId": "AGREE.INTERVENE", "choices": ["covers", "cover", "covering"], "answer": 0, "explanation": "The subject is “the roster” — singular. “Of exclusions in the plan documents” is nine words of camouflage." }
+      ] },
+    { "id": "PR013", "title": "Procedural history — eve-of-trial motions", "function": "procedural history", "difficulty": 1,
+      "tokens": ["Marsh", "filed", "three", "motions", "on", "the", "eve", "of", "trial:", "a", "motion", "to", "continue,", "a", "motion", "to", "exclude", "the", "government's", "expert", "and", "a", "motion", "to", "dismiss", "the", "superseding", "indictment.", "The", "district", "court", "denied", "all", "three", "in", "a", "single", "order,", "and", "the", "case", "proceeded", "to", "trial", "four", "days", "later."],
+      "errors": [
+        { "at": 19, "token": "expert", "ruleId": "COMMA.SERIAL", "choices": ["expert,", "expert", "expert;"], "answer": 0, "explanation": "Serial comma before the final “and” — house style without exception: “…the government's expert, and a motion to dismiss.”" }
+      ] },
+    { "id": "PR014", "title": "Habeas — deference", "function": "standard of review", "difficulty": 2,
+      "tokens": ["When", "the", "state", "court", "adjudicates", "a", "claim", "on", "the", "merits,", "federal", "review", "is", "deferential.", "The", "petitioner", "must", "show", "that", "it", "unreasonably", "applied", "clearly", "established", "law.", "Here,", "the", "Georgia", "Supreme", "court", "rejected", "Dawson's", "claim", "in", "a", "reasoned", "opinion,", "and", "that", "decision", "easily", "clears", "the", "deferential", "bar."],
+      "errors": [
+        { "at": 19, "token": "it", "ruleId": "PRON.ANTECEDENT", "choices": ["the state court", "it", "he"], "answer": 0, "explanation": "“It” drifts — the petitioner? the claim? the court? Litigation prose repeats the noun: “must show that the state court unreasonably applied…” The corpus writers re-name rather than risk this." },
+        { "at": 29, "token": "court", "ruleId": "CONV.COURT", "choices": ["Court", "court", "COURT"], "answer": 0, "explanation": "“The Georgia Supreme Court” is a proper name — both words capitalize. Generic references (“the state court”) stay lowercase." }
+      ] },
+    { "id": "PR015", "title": "Contract — renewal options", "function": "contract analysis", "difficulty": 3,
+      "tokens": ["The", "agreement", "gives", "Meridian", "two", "options", "at", "renewal:", "it", "can", "extend", "the", "lease", "on", "the", "existing", "terms,", "or", "it", "can", "trigger", "an", "adjustment", "to", "market", "rates.", "The", "adjustment", "clause", "applies", "to", "both", "short", "and", "long-term", "tenancies,", "and", "it", "requires", "the", "parties", "to", "exchange", "appraisals,", "negotiate", "in", "good", "faith,", "and", "submission", "of", "any", "dispute", "to", "arbitration."],
+      "errors": [
+        { "at": 32, "token": "short", "ruleId": "HYPH.SUSPEND", "choices": ["short-", "short", "short,"], "answer": 0, "explanation": "Sharing the base “-term,” the first modifier keeps a hanging hyphen: “short- and long-term tenancies.”" },
+        { "at": 49, "token": "submission", "ruleId": "PARA.LIST", "choices": ["to submit", "submission", "submitting"], "answer": 0, "explanation": "The series runs “to exchange…, negotiate…, and ___” — the third item must stay an infinitive: “to submit any dispute to arbitration.” A noun can’t close a verb series." }
+      ] },
+    { "id": "PR016", "title": "Sentencing — clean recitation", "function": "factual background", "difficulty": 2,
+      "tokens": ["Reyes", "pleaded", "guilty", "to", "one", "count", "of", "wire", "fraud", "and", "was", "sentenced", "to", "sixty-three", "months'", "imprisonment.", "At", "sentencing,", "the", "district", "court", "found", "that", "the", "scheme", "caused", "losses", "of", "$1.4", "million", "and", "that", "Reyes", "had", "recruited", "two", "accomplices.", "Neither", "finding", "is", "clearly", "erroneous.", "The", "court's", "guidelines", "calculation,", "which", "both", "parties", "accepted", "below,", "tracks", "the", "presentence", "report."],
+      "errors": [] },
+    { "id": "PR017", "title": "Administrative law — stated goals", "function": "statutory analysis", "difficulty": 2,
+      "tokens": ["The", "Bureau's", "brief", "identifies", "three", "interests:", "administrative", "convenience,", "national", "uniformity,", "and", "fiscal", "restraint.", "But", "the", "rule's", "preamble", "tells", "a", "different", "story.", "The", "stated", "goals", "include:", "insuring", "accurate", "reporting", "and", "deterring", "repeat", "violations.", "Neither", "goal", "explains", "why", "the", "Bureau", "declined", "to", "grandfather", "existing", "permits."],
+      "errors": [
+        { "at": 24, "token": "include:", "ruleId": "PUNCT.COLON", "choices": ["include", "include:", "include;"], "answer": 0, "explanation": "A colon can’t split a verb from its objects — “the goals include insuring… and deterring…” (The earlier colon after “three interests” is correct: it follows a complete clause.)" },
+        { "at": 25, "token": "insuring", "ruleId": "WORD.ENSURE", "choices": ["ensuring", "insuring", "assuring"], "answer": 0, "explanation": "Making certain = ENSURING. Insuring is what carriers do; assuring is for people." }
+      ] },
+    { "id": "PR018", "title": "Labor grievance — untimely filing", "function": "application", "difficulty": 3,
+      "tokens": ["Under", "the", "collective", "bargaining", "agreement,", "an", "employee", "may", "grieve", "a", "suspension", "within", "ten", "days.", "Ortiz", "only filed his grievance", "after", "thirty;", "he", "says", "the", "deadline", "should", "be", "tolled.", "Each", "of", "his", "three", "excuses", "fail", "on", "the", "record.", "The", "unions'", "own", "steward—Ortiz's", "designated", "representative—testified", "that", "Ortiz", "knew", "the", "deadline", "the", "day", "the", "suspension", "issued."],
+      "errors": [
+        { "at": 15, "token": "only filed his grievance", "ruleId": "MOD.ONLY", "choices": ["filed his grievance only", "only filed his grievance", "filed only his grievance"], "answer": 0, "explanation": "The point is TIMING — he filed only AFTER thirty days — so “only” belongs next to “after thirty.” Where it sits now, it limits the filing itself; before “his grievance,” it would count grievances." },
+        { "at": 30, "token": "fail", "ruleId": "AGREE.INDEF", "choices": ["fails", "fail", "failed"], "answer": 0, "explanation": "“Each” is singular even trailed by “of his three excuses” — each…fails." },
+        { "at": 35, "token": "unions'", "ruleId": "POSS.PLURAL", "choices": ["union's", "unions'", "unions"], "answer": 0, "explanation": "One union — the CBA’s — so singular possessive: “the union's own steward.” The apostrophe’s position asserts how many unions there are; here the record has one." }
+      ] },
+    { "id": "PR019", "title": "Jurisdiction — clean check", "function": "jurisdiction", "difficulty": 3,
+      "tokens": ["Whether", "we", "have", "jurisdiction", "is", "a", "question", "we", "answer", "for", "ourselves.", "The", "notice", "of", "appeal,", "filed", "twenty-eight", "days", "after", "judgment,", "was", "timely.", "And", "though", "the", "county", "now", "waives", "its", "challenge", "to", "standing,", "waiver", "does", "not", "relieve", "us", "of", "our", "independent", "obligation.", "Standing", "exists:", "Ortiz", "alleges", "a", "concrete", "injury", "that", "a", "favorable", "ruling", "would", "redress."],
+      "errors": [] },
+    { "id": "PR020", "title": "Immigration — the removable-offense list", "function": "statutory analysis", "difficulty": 3,
+      "tokens": ["The", "statute", "sets", "out", "a", "discreet", "list", "of", "removable", "offenses:", "crimes", "involving", "moral", "turpitude,", "committed", "within", "five", "years", "of", "admission;", "aggravated", "felonies,", "defined", "by", "reference", "to", "federal", "law,", "and", "controlled", "substance", "offenses.", "Because", "the", "list", "is", "exclusive,", "the", "government's", "catchall", "theory", "fails."],
+      "errors": [
+        { "at": 5, "token": "discreet", "ruleId": "WORD.LEGALPAIRS", "choices": ["discrete", "discreet", "discretionary"], "answer": 0, "explanation": "Separate and distinct = DISCRETE. “Discreet” means tactfully quiet — and spell-check happily accepts the wrong one." },
+        { "at": 27, "token": "law,", "ruleId": "PUNCT.SEMILIST", "choices": ["law;", "law,", "law —"], "answer": 0, "explanation": "The list items carry internal commas, so the separators must ALL be semicolons: “…of admission; aggravated felonies, defined by reference to federal law; and controlled substance offenses.” One junction was left behind as a comma." }
+      ] },
+    { "id": "PR021", "title": "Conclusion — remedy affirmed", "function": "remedy and conclusion", "difficulty": 2,
+      "tokens": ["One", "final", "point", "about", "the", "remedy.", "The", "order", "requires", "the", "county", "both", "to", "repost", "the", "withdrawn", "notices", "and", "publishing", "them", "on", "the", "county's", "website.", "The", "county", "did", "not", "challenge", "that", "requirement", "below,", "and", "we", "see", "no", "plain", "error", "in", "it.", "The", "judgment", "is", "AFFIRMED."],
+      "errors": [
+        { "at": 18, "token": "publishing", "ruleId": "PARA.CORRELATIVE", "choices": ["to publish", "publishing", "published"], "answer": 0, "explanation": "“Both to repost … and to publish” — what follows “both” and what follows “and” must mirror each other. (The opening fragment “One final point about the remedy.” is deliberate style — not an error.)" }
+      ] },
+    { "id": "PR022", "title": "Arbitration appeal — three traps", "function": "procedural history", "difficulty": 3,
+      "tokens": ["The", "defendants—a", "broker,", "two", "subsidiaries,", "and", "the", "parent", "company—was", "served", "in", "March.", "Only", "the", "parent", "responded.", "It", "moved", "to", "compel", "arbitration", "under", "a", "clause", "which", "appears", "in", "the", "2021", "account", "agreement,", "quoting", "the", "clause", "as", "requiring", "arbitration", "of", "“all", "disputes", "arising", "out", "of", "or", "relating", "to", "this", "agreement”.", "The", "district", "court", "granted", "the", "motion,", "and", "this", "appeal", "followed."],
+      "errors": [
+        { "at": 8, "token": "company—was", "ruleId": "AGREE.INTERVENE", "choices": ["company—were", "company—was", "company, was"], "answer": 0, "explanation": "The subject is “the defendants” — plural — and agreement must survive the em-dash aside listing them: “The defendants—a broker, two subsidiaries, and the parent company—were served.”" },
+        { "at": 24, "token": "which", "ruleId": "COMMA.THATWHICH", "choices": ["that", "which", "which,"], "answer": 0, "explanation": "Restrictive clause identifying the clause at issue → “that appears in the 2021 account agreement.”" },
+        { "at": 47, "token": "agreement”.", "ruleId": "PUNCT.QUOTE", "choices": ["agreement.”", "agreement”.", "agreement,”"], "answer": 0, "explanation": "The period tucks inside the closing quotation mark — American convention, no exceptions for long quotes." }
+      ] }
+  ]
+}

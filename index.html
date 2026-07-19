@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1b2a41">
+<title>Grammar Chambers</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Grammar">
+<link rel="stylesheet" href="./styles.css?v=2">
+</head>
+<body>
+<div id="app" aria-live="polite">
+  <!-- ============ HOME / DASHBOARD ============ -->
+  <section id="screen-home" class="screen" hidden>
+    <header class="home-head">
+      <h1>Grammar Chambers</h1>
+      <p class="tagline">Clean prose, automatic.</p>
+    </header>
+    <div class="card completion-card">
+      <div class="completion-ring-wrap">
+        <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="ring-bg" cx="60" cy="60" r="52"/>
+          <circle class="ring-fg" id="ring-fg" cx="60" cy="60" r="52"/>
+        </svg>
+        <div class="ring-label">
+          <span id="home-pct" class="pct">0%</span>
+          <span class="pct-sub">complete</span>
+        </div>
+      </div>
+      <div class="completion-stats">
+        <div class="stat"><span id="stat-hours">–</span><label id="stat-hours-label">hours left</label></div>
+        <div class="stat"><span id="stat-days">–</span><label>days to Aug 17</label></div>
+        <div class="stat"><span id="stat-auto">–</span><label>rules automatic</label></div>
+        <div class="stat"><span id="stat-passages">–</span><label>passages cleared</label></div>
+      </div>
+    </div>
+    <div id="diag-banner" class="card diag-banner" hidden>
+      <div>
+        <strong>Diagnostic</strong>
+        <p id="diag-banner-sub">Map your weak spots — ~1 hour, in pieces, whenever.</p>
+      </div>
+      <button id="btn-diagnostic" class="btn btn-secondary">Start</button>
+    </div>
+    <button id="btn-drill" class="btn btn-primary btn-big">Start drilling</button>
+    <div class="card watch-card">
+      <div class="watch-row">
+        <span class="watch-emoji" aria-hidden="true">⌚</span>
+        <div class="watch-info">
+          <div class="watch-amounts"><strong id="watch-earned">$0</strong> of <span id="watch-budget">$225</span></div>
+          <div class="bar"><div id="watch-bar" class="bar-fill"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card weak-card">
+      <h2>Needs work</h2>
+      <ul id="weak-list" class="weak-list"><li class="muted">Play a few rounds and your weak spots will show here.</li></ul>
+    </div>
+    <p class="est-note" id="est-note" hidden></p>
+  </section>
+
+  <!-- ============ DRILL / DIAGNOSTIC SESSION ============ -->
+  <section id="screen-drill" class="screen" hidden>
+    <header class="drill-head">
+      <button id="btn-exit-drill" class="icon-btn" aria-label="End session">✕</button>
+      <div class="session-progress"><span id="session-count">0 answered</span> · <span id="session-correct">0 correct</span></div>
+      <span id="drill-mode-chip" class="chip" hidden>Diagnostic</span>
+    </header>
+    <div id="drill-body" class="drill-body">
+      <!-- item rendered here -->
+    </div>
+    <div id="drill-actions" class="drill-actions"></div>
+  </section>
+
+  <!-- ============ MASTERY GRID ============ -->
+  <section id="screen-mastery" class="screen" hidden>
+    <header class="screen-head"><h1>Mastery</h1><p class="screen-sub" id="mastery-summary"></p></header>
+    <div id="mastery-grid"></div>
+  </section>
+
+  <!-- ============ PROOFREADING LIBRARY ============ -->
+  <section id="screen-passages" class="screen" hidden>
+    <header class="screen-head"><h1>Passages</h1><p class="screen-sub" id="passages-summary"></p></header>
+    <div id="passage-list"></div>
+  </section>
+
+  <!-- ============ REWARDS ============ -->
+  <section id="screen-rewards" class="screen" hidden>
+    <header class="screen-head"><h1>Rewards</h1></header>
+    <div class="card watch-card big">
+      <div class="watch-row">
+        <span class="watch-emoji big" aria-hidden="true">⌚</span>
+        <div class="watch-info">
+          <div class="watch-amounts"><strong id="rw-earned">$0</strong> of <span id="rw-budget">$225</span> watch fund</div>
+          <div class="bar"><div id="rw-bar" class="bar-fill"></div></div>
+          <p class="muted small">Reach 100% before Aug 17 and the completion bonus tops the fund to the full budget.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>How you earn</h2>
+      <ul id="reward-rules" class="plain-list small"></ul>
+    </div>
+    <div class="card">
+      <h2>Ledger</h2>
+      <ul id="ledger-list" class="plain-list"></ul>
+    </div>
+  </section>
+
+  <!-- ============ SETTINGS ============ -->
+  <section id="screen-settings" class="screen" hidden>
+    <header class="screen-head"><h1>Settings</h1></header>
+    <div class="card">
+      <h2>Display</h2>
+      <label class="setting-row">Text size
+        <select id="set-font"><option value="1">Normal</option><option value="1.12">Large</option><option value="1.25">Larger</option></select>
+      </label>
+      <label class="setting-row">Theme
+        <select id="set-theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select>
+      </label>
+    </div>
+    <div class="card">
+      <h2>Drilling</h2>
+      <label class="setting-row">Strict proofreading <input type="checkbox" id="set-strict"></label>
+      <p class="muted small">Strict mode allows at most one false flag per passage.</p>
+    </div>
+    <div class="card">
+      <h2>Rewards</h2>
+      <label class="setting-row">Watch budget ($) <input type="number" id="set-budget" min="10" max="5000" step="5"></label>
+      <label class="setting-row">Per session ($) <input type="number" id="set-rw-session" min="0" max="100" step="0.5"></label>
+      <label class="setting-row">Per category ($) <input type="number" id="set-rw-category" min="0" max="500" step="1"></label>
+      <p class="muted small">Changes apply to future earnings only; the ledger never rewrites history.</p>
+    </div>
+    <div class="card">
+      <h2>Data</h2>
+      <button id="btn-export" class="btn btn-secondary">Back up progress</button>
+      <button id="btn-import" class="btn btn-secondary">Restore from backup</button>
+      <input type="file" id="import-file" accept="application/json" hidden>
+      <button id="btn-reset" class="btn btn-danger">Reset all progress</button>
+      <p class="muted small">Progress lives only in this browser. Back it up now and then — a backup is a small
+      file you can restore from if Safari ever clears site data.</p>
+    </div>
+    <div class="card">
+      <h2>About</h2>
+      <p class="muted small">Grammar Chambers · content <span id="about-content-version">–</span> · app v1<br>
+      Curriculum grounded in 26 published opinions of Judge Britt Grant (11th Cir., 2021–2026)
+      and 12 recent Supreme Court majority opinions. Authorities: Garner's Redbook, Garner's
+      Modern English Usage, Chicago Manual of Style. No accounts, no analytics — everything stays on your phone.</p>
+    </div>
+  </section>
+
+  <!-- ============ BOTTOM NAV ============ -->
+  <nav id="tabbar" class="tabbar" hidden>
+    <button data-nav="home" class="tab active" aria-label="Home"><span class="tab-ico">◉</span>Home</button>
+    <button data-nav="mastery" class="tab" aria-label="Mastery"><span class="tab-ico">▦</span>Mastery</button>
+    <button data-nav="passages" class="tab" aria-label="Passages"><span class="tab-ico">¶</span>Passages</button>
+    <button data-nav="rewards" class="tab" aria-label="Rewards"><span class="tab-ico">⌚</span>Rewards</button>
+    <button data-nav="settings" class="tab" aria-label="Settings"><span class="tab-ico">⚙</span>Settings</button>
+  </nav>
+
+  <div id="toast" class="toast" hidden></div>
+  <div id="modal-root"></div>
+</div>
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>
