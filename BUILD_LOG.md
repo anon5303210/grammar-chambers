@@ -44,3 +44,51 @@ study the real material first. "Teach me grammar" gets you generic worksheets; "
 curriculum with a reason for every question.
 
 ---
+
+## Entry 2 — July 18, 2026: Built, tested, and live in one sitting
+
+**What we were trying to do.** Turn the corpus findings into a working, deployed app the
+same day: the drill engine, the actual questions, and a public web address.
+
+**What the reading found.** Four of the six research agents returned before hitting a
+usage cap (the fifth and sixth were cut short — noted honestly in CORPUS_REPORT.md).
+The three completed Judge Grant batches (~450 pages) agreed on nearly everything, which
+is what let us treat her habits as rules: serial comma always, "that" for defining
+clauses, unspaced dashes, "Congress's"-style possessives, numbers spelled through one
+hundred, institutions always singular. Just as valuable: the readers caught real,
+published mistakes — a typo ("unecessary") and a grammar slip in Supreme Court opinions,
+and two agreement slips in Judge Grant's own — which became the model for the app's
+find-the-error passages. Anything judges do differently from one another (contractions,
+generic he/she) got walled off so the app never marks a legitimate choice "wrong."
+
+**What got built.** 51 rules across 11 categories; 240 hand-written drill items (163
+multiple-choice, 55 tap-the-error, 22 proofreading passages — 5 of them deliberately
+error-free, because knowing when NOT to edit is half of proofreading); a 78-question
+diagnostic that saves after every answer so it can be done in pieces across days; a
+spaced-repetition engine with three mastery levels; the completion bar with an honest
+hours-remaining estimate; and the watch-fund ledger with anti-cheating rules (a
+"session" only pays if it's 10+ questions and 5+ minutes, at most twice a day).
+
+**Dead ends and fixes.** (1) A one-line CSS rule accidentally made every screen render
+at once — the styling overrode the HTML "hidden" flag; one line fixed it. (2) The app's
+offline cache kept serving the OLD stylesheet after the fix, which is why the site now
+version-stamps its stylesheet. (3) A quality safeguard that earned its keep: every
+planted error in a proofreading passage records which word it expects at its position,
+and a validator script checks all 240 items' answer keys and positions before deploy —
+it passed, but it's the reason a miscounted word position can't silently ship. (4) The
+screenshot tool in the testing pane kept timing out, so visual checks were done through
+the page structure instead — the app itself was unaffected.
+
+**Deployment.** New public repo under the same GitHub account as the Oyez site, Pages
+enabled by script, verified live: **https://anon5303210.github.io/grammar-chambers/**.
+One discovery worth knowing: the GitHub account was renamed at some point
+(chicoboy700 → anon5303210), and page addresses do NOT follow renames — the old Oyez
+bookmark now 404s. The Oyez site still works at
+https://anon5303210.github.io/Oyez-Arguments/ — update the phone's home-screen icon.
+
+**Try it yourself.** Two habits made this build trustworthy: write the checker before
+the content (the validator caught nothing only because writing it first forced careful
+counting), and test the real thing (the live URL, on the phone-sized screen), not just
+the local copy.
+
+---
