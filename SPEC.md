@@ -1,6 +1,7 @@
 # Grammar Chambers — Final Specification (Phase 0 decisions)
 
-Locked in with Navid on 2026-07-18.
+Locked in with Navid on 2026-08-02. (The content version string `2026-07-18.x` is a
+stable identifier, not a date claim — leave it alone.)
 
 ## Product decisions
 - **Scope**: pure grammar and mechanics. **Excluded**: Bluebook/citation mechanics

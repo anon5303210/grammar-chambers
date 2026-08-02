@@ -5,7 +5,7 @@ reader. (Same journal habit as the Oyez Arguments project.)
 
 ---
 
-## Entry 1 — July 18, 2026: The plan, the questions, and the reading assignment
+## Entry 1 — August 2, 2026: The plan, the questions, and the reading assignment
 
 **What we were trying to do.** Navid starts a federal clerkship on August 17 and wants
 his grammar to be automatic by then — clean bench memos, sharp proofreading — without
@@ -45,7 +45,7 @@ curriculum with a reason for every question.
 
 ---
 
-## Entry 2 — July 18, 2026: Built, tested, and live in one sitting
+## Entry 2 — August 2, 2026: Built, tested, and live in one sitting
 
 **What we were trying to do.** Turn the corpus findings into a working, deployed app the
 same day: the drill engine, the actual questions, and a public web address.
@@ -93,7 +93,7 @@ the local copy.
 
 ---
 
-## Entry 3 — July 18, 2026: Teaching the app the book Navid is actually reading
+## Entry 3 — August 2, 2026: Teaching the app the book Navid is actually reading
 
 **What we were trying to do.** Navid is working through *The Blue Book of Grammar and
 Punctuation* (Kaufman & Straus, 12th ed.) — the standard plain-English grammar manual. He
