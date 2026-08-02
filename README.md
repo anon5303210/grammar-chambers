@@ -15,9 +15,14 @@ everything via **Restore from backup**.
 
 ## What's inside
 - `index.html`, `styles.css`, `js/` — the app (ES modules: store, content, engine, ui)
-- `data/rules.json` — 51 rules in 11 categories with corpus-derived weights
-- `data/quick-fire.json`, `data/fix-it.json`, `data/proofreading.json` — the drill
-  content (163 + 55 + 22 items in v2026-07-18.1)
+- `data/rules.json` — 87 rules in 16 categories with corpus-derived weights
+- `data/quick-fire.json`, `data/fix-it.json`, `data/proofreading.json` — the corpus-driven
+  drill content (183 + 55 + 22 items)
+- `data/bb-*.json` — the **Blue Book companion**: 23 units / 284 exercises mirroring the
+  chapter structure and quiz formats of *The Blue Book of Grammar and Punctuation*
+  (Kaufman & Straus, 12th ed.), all newly written so reading the book doesn't spoil them.
+  Item types are `mc`, `spot` (a sentence with 0–1 planted errors — the book's
+  "correct-it-or-check-it" format), and `tap` (identify the subject or verb).
 - `tests/content-validator.js` — run `node tests/content-validator.js`; the build is
   broken if it fails. It verifies answer keys, rule references, and (critically) that
   every proofreading error's token index matches its expected token.
@@ -29,8 +34,9 @@ everything via **Restore from backup**.
 
 ## How progress works (short version)
 Every rule climbs Novice → Solid → Automatic on spaced, repeated evidence (details in
-SPEC.md). The completion bar = 75% weighted rule mastery + 25% proofreading passages
-cleared, with a fixed denominator per content version. The hours-remaining estimate
+SPEC.md). The completion bar = 65% weighted rule mastery + 20% proofreading passages
+cleared + 15% Blue Book units cleared, with a fixed denominator per content version.
+A rule never needs more item formats than the content actually contains. The hours-remaining estimate
 starts from defaults and calibrates to measured pace. Rewards accrue to a self-funded
 watch ledger; reaching 100% before August 17, 2026 tops the fund to the full budget.
 

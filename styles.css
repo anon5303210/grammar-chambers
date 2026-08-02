@@ -212,6 +212,27 @@ body {
 .pass-badge { font-size: .72rem; padding: 4px 10px; border-radius: 12px; background: var(--line); color: var(--ink-soft); flex: none; }
 .pass-badge.cleared { background: var(--good); color: #fff; }
 
+/* ============ Blue Book companion ============ */
+.book-intro p + p { margin-top: 8px; }
+.linklike {
+  background: none; border: none; padding: 0; font: inherit; color: var(--accent);
+  text-decoration: underline; cursor: pointer; text-align: left;
+}
+.unit-chapter {
+  font-size: .78rem; text-transform: uppercase; letter-spacing: .09em;
+  color: var(--ink-soft); margin: 14px 2px 6px;
+}
+.unit-item {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 13px 14px; margin-bottom: 8px; cursor: pointer; min-height: 52px;
+}
+.unit-main { min-width: 0; }
+.unit-title { font-size: .93rem; font-weight: 600; }
+.unit-meta { font-size: .76rem; color: var(--ink-soft); margin-top: 2px; }
+.unit-pages { font-size: .78rem; color: var(--ink-soft); margin-bottom: 8px !important; }
+.completion-card { cursor: pointer; }
+
 /* ============ Rewards / settings ============ */
 .plain-list { list-style: none; }
 .plain-list li { padding: 9px 0; border-bottom: 1px solid var(--line); font-size: .9rem; display: flex; justify-content: space-between; gap: 10px; }
@@ -241,10 +262,10 @@ body {
 }
 .tab {
   flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
-  background: none; border: none; font-size: .68rem; color: var(--ink-soft);
-  padding: 6px 2px; cursor: pointer; min-height: 48px; font-family: var(--sans);
+  background: none; border: none; font-size: .62rem; color: var(--ink-soft);
+  padding: 6px 1px; cursor: pointer; min-height: 48px; font-family: var(--sans);
 }
-.tab-ico { font-size: 1.15rem; }
+.tab-ico { font-size: 1.05rem; line-height: 1.2; }
 .tab.active { color: var(--accent); font-weight: 700; }
 
 /* Toast + modal */

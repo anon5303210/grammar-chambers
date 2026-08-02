@@ -92,3 +92,52 @@ counting), and test the real thing (the live URL, on the phone-sized screen), no
 the local copy.
 
 ---
+
+## Entry 3 — July 18, 2026: Teaching the app the book Navid is actually reading
+
+**What we were trying to do.** Navid is working through *The Blue Book of Grammar and
+Punctuation* (Kaufman & Straus, 12th ed.) — the standard plain-English grammar manual. He
+asked for a section of the app with end-of-chapter exercises that test the same concepts as
+the book's own quizzes but use different sentences, so reading the book doesn't spoil the
+practice.
+
+**The decision that drove it.** Rather than guess at the book's contents, we extracted all
+272 pages of its text and read it: every rule chapter, and — just as important — the *format*
+of its 40-odd quizzes. The book has a signature exercise style worth copying: "Correct the
+error in each sentence. Place a check mark in front of sentences that are correct." That is
+proofreading in miniature, including the discipline of leaving a clean sentence alone.
+
+**What got built.** A new **Book** tab with 23 units mirroring the book's own chapter
+structure — from "Finding Nouns, Verbs, and Subjects" through two mastery tests — holding
+**284 new exercises**, all newly written. Each unit shows the book pages it covers and a
+short refresher of the rules before you start; progress saves after every question, so a
+unit can be done in two-minute pieces; clearing one takes 80%. Thirty-four of the sentences
+are deliberately already correct. The app gained a new question type along the way — tap the
+subject, tap the main verb — because the book teaches sentence anatomy that way and multiple
+choice can't test it.
+
+**The interesting wrinkle: the book and the judge disagree.** The Blue Book repeatedly says
+"pick a formula and be consistent" where authorities differ — possessives of names ending in
+s, the serial comma, spacing around dashes, how many numbers to spell out. Judge Grant's
+opinions pick a side on every one of those. So the app now carries a plain-language
+"Where this app and the book disagree" note, reachable from the Book tab, listing all seven
+divergences. Where the disagreement is genuinely live, the exercise asks Navid to *recognize
+the split* rather than pretend one answer is correct.
+
+**Dead ends and fixes.** Three real bugs, all caught by testing rather than by reading the
+code. (1) The unit runner crashed on launch because the screen tried to draw the progress bar
+before it knew which unit it was running. (2) Grading a Blue Book sentence silently died
+halfway through — a variable defined in one function was used in another, so the score never
+appeared. (3) The most consequential one: the mastery system required seeing each rule in two
+different question formats, but a few rules had only a single question, so those rules could
+never be mastered — which quietly made 100% completion unreachable. Fixed by never demanding
+more formats than the content actually offers, and by writing 20 more questions so no rule
+rests on one item. The build now stands at **544 exercises across 87 rules**, and the honest
+time estimate rose from about 6 hours to about 11 — more ground to cover, stated plainly.
+
+**Try it yourself.** When you build a study tool around a book, extract the book's *exercise
+formats*, not just its rules. The format is where the pedagogy lives — the Blue Book's habit
+of slipping already-correct sentences into every quiz teaches restraint, which no amount of
+rule-reading does.
+
+---

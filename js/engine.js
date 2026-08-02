@@ -2,7 +2,7 @@
 // hours-remaining estimate, and the reward ledger. Formulas documented in SPEC.md.
 
 import { load, save } from './store.js';
-import { content, itemRuleIds, ruleHasProofCoverage } from './content.js';
+import { content, itemRuleIds, ruleHasProofCoverage, formsAvailable } from './content.js';
 
 // ---- deadline ----
 // "Before August 17" = end of August 16, 11:59 pm America/New_York (EDT in August).
@@ -42,8 +42,10 @@ export function masteryOf(ruleId) {
   if (rs.enc < SOLID.enc) return 'novice';
   const acc10 = recentAcc(rs, 10);
   const forms = Object.keys(rs.forms).length;
+  // never demand more item formats than this rule actually has content for
+  const formsNeeded = Math.min(SOLID.forms, formsAvailable(ruleId));
   const hadDelay = rs.delayedTimes.length >= 1;
-  const isSolid = acc10 >= SOLID.acc && forms >= SOLID.forms && hadDelay;
+  const isSolid = acc10 >= SOLID.acc && forms >= formsNeeded && hadDelay;
   if (!isSolid) return 'novice';
   // automatic?
   const last5 = rs.recent.slice(-5);
@@ -99,9 +101,10 @@ export function recordAnswer(item, correct, seconds, { inProof = false } = {}) {
     rs.lastSeen = now;
     if (inProof && correct) rs.proofOK = true;
   }
-  // timing samples
+  // timing samples ('spot' and 'tap' are sentence-length, so they share the fix-it bucket)
   if (seconds && seconds > 1 && seconds < 600) {
-    const arr = s.timing[item.type === 'proof' ? 'proof' : item.type];
+    const bucket = item.type === 'proof' ? 'proof' : item.type === 'mc' ? 'mc' : 'fixit';
+    const arr = s.timing[bucket];
     if (arr) { arr.push(seconds); if (arr.length > 40) arr.shift(); }
   }
   save();
@@ -175,9 +178,15 @@ export function completion() {
   const totalP = content.proofItems.length;
   const clearedP = content.proofItems.filter(p => s.proof[p.id]?.cleared).length;
   const proofFrac = totalP ? clearedP / totalP : 0;
-  const overall = 0.75 * ruleFrac + 0.25 * proofFrac;
+  const totalU = content.units.length;
+  const clearedU = content.units.filter(u => s.units[u.id]?.cleared).length;
+  const unitFrac = totalU ? clearedU / totalU : 0;
+  const overall = 0.65 * ruleFrac + 0.20 * proofFrac + 0.15 * unitFrac;
   const autoCount = content.rules.filter(r => masteryOf(r.id) === 'auto').length;
-  return { overall, ruleFrac, proofFrac, autoCount, ruleTotal: content.rules.length, clearedP, totalP };
+  return {
+    overall, ruleFrac, proofFrac, unitFrac, autoCount,
+    ruleTotal: content.rules.length, clearedP, totalP, clearedU, totalU,
+  };
 }
 
 // ---- hours-remaining estimate ----
@@ -220,6 +229,15 @@ export function hoursRemaining() {
   }
   for (const p of content.proofItems) {
     if (!s.proof[p.id]?.cleared) seconds += t.proof * 1.4;
+  }
+  // Blue Book units not yet cleared: count only the items still unanswered in
+  // this pass, so a half-finished unit doesn't keep charging you for the whole thing.
+  for (const u of content.units) {
+    const st = s.units[u.id];
+    if (st?.cleared) continue;
+    const done = st?.idx || 0;
+    const left = Math.max(0, u.items.length - done);
+    seconds += left * (0.4 * t.mc + 0.6 * t.fixit);
   }
   const hours = seconds / 3600;
   return {
@@ -277,6 +295,16 @@ export function checkMilestones() {
   const c = completion();
   if (c.totalP && c.clearedP === c.totalP) {
     if (award('allpassages', 'All proofreading passages cleared', s.settings.rwAllPassages)) paid.push(`All passages cleared — $${s.settings.rwAllPassages}`);
+  }
+  for (const u of content.units) {
+    if (s.units[u.id]?.cleared) {
+      if (award(`unit:${u.id}`, `Blue Book unit cleared: ${u.title}`, s.settings.rwUnit)) {
+        paid.push(`Unit cleared: ${u.title} — $${s.settings.rwUnit}`);
+      }
+    }
+  }
+  if (c.totalU && c.clearedU === c.totalU) {
+    if (award('allunits', 'Every Blue Book unit cleared', s.settings.rwAllUnits)) paid.push(`Whole book drilled — $${s.settings.rwAllUnits} ⌚`);
   }
   if (c.overall >= 0.9999 && Date.now() < DEADLINE) {
     const topUp = Math.max(0, s.settings.watchBudget - earnedTotal());

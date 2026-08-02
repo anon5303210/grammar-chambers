@@ -13,6 +13,8 @@ export const DEFAULT_SETTINGS = {
   rwCategory: 15,
   rwDiagnostic: 10,
   rwAllPassages: 25,
+  rwUnit: 3,
+  rwAllUnits: 20,
 };
 
 export function freshState() {
@@ -26,6 +28,7 @@ export function freshState() {
     // per-item spaced-repetition state
     itemState: {},   // itemId -> {seen, cor, lastSeen, nextDue, box}
     proof: {},       // itemId -> {attempts, cleared, bestScore}
+    units: {},       // unitId -> {attempts, idx, correct, bestScore, cleared}
     ledger: [],      // {ts, reason, amount, key}
     milestones: {},  // milestoneKey -> ts (pay-once guard)
     sessions: [],    // {start, end, items, correct, qualified}

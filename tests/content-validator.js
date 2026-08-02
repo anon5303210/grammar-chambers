@@ -80,12 +80,66 @@ for (const it of pr.items) {
   }
 }
 
+// ---- Blue Book companion units ----
+const unitFiles = ['bb-grammar.json', 'bb-punctuation.json', 'bb-capnum.json', 'bb-words.json'];
+const units = [];
+for (const f of unitFiles) {
+  const doc = JSON.parse(fs.readFileSync(path.join(dataDir, f), 'utf8'));
+  units.push(...doc.units.map(u => ({ ...u, _file: f })));
+}
+const unitIds = new Set();
+for (const u of units) {
+  if (unitIds.has(u.id)) errors.push(`duplicate unit id ${u.id}`);
+  unitIds.add(u.id);
+  if (!u.title || !u.chapter || !u.bookPages || !u.recap) errors.push(`unit ${u.id}: missing title/chapter/bookPages/recap`);
+  if (!Array.isArray(u.items) || u.items.length < 8) errors.push(`unit ${u.id}: needs >=8 items`);
+  for (const it of u.items || []) {
+    checkId(it.id, `unit ${u.id}`);
+    if (!['mc', 'spot', 'tap'].includes(it.type)) errors.push(`${it.id}: bad unit item type ${it.type}`);
+    if (!ruleIds.has(it.ruleId)) errors.push(`${it.id}: unknown rule ${it.ruleId}`);
+    if (!it.prompt) errors.push(`${it.id}: missing prompt`);
+    if (it.type === 'mc') {
+      if (!Array.isArray(it.options) || it.options.length < 2) errors.push(`${it.id}: needs >=2 options`);
+      else {
+        if (new Set(it.options).size !== it.options.length) errors.push(`${it.id}: duplicate options`);
+        if (typeof it.answer !== 'number' || it.answer < 0 || it.answer >= it.options.length) errors.push(`${it.id}: answer out of range`);
+      }
+      if (!it.explanation || it.explanation.length < 20) errors.push(`${it.id}: explanation missing/too short`);
+    } else if (it.type === 'tap') {
+      if (!Array.isArray(it.tokens) || it.tokens.length < 3) errors.push(`${it.id}: tokens missing`);
+      if (!Array.isArray(it.targets) || !it.targets.length) errors.push(`${it.id}: targets missing`);
+      else for (const t of it.targets) if (t < 0 || t >= it.tokens.length) errors.push(`${it.id}: target ${t} out of range`);
+      if (!it.explanation || it.explanation.length < 20) errors.push(`${it.id}: explanation missing/too short`);
+    } else { // spot
+      if (!Array.isArray(it.tokens) || it.tokens.length < 4) errors.push(`${it.id}: tokens missing`);
+      if (!Array.isArray(it.errors)) { errors.push(`${it.id}: errors array missing`); continue; }
+      if (it.errors.length > 1) errors.push(`${it.id}: spot items take at most 1 planted error`);
+      for (const [i, e] of it.errors.entries()) {
+        const len = e.len || 1;
+        if (typeof e.at !== 'number' || e.at < 0 || e.at + len > it.tokens.length) { errors.push(`${it.id} error ${i}: span out of range`); continue; }
+        const actual = it.tokens.slice(e.at, e.at + len).join(' ');
+        if (e.token !== undefined && actual !== e.token) errors.push(`${it.id} error ${i}: token mismatch — expected "${e.token}", tokens say "${actual}"`);
+        if (!ruleIds.has(e.ruleId || it.ruleId)) errors.push(`${it.id} error ${i}: unknown rule`);
+        if (!Array.isArray(e.choices) || e.choices.length < 2) errors.push(`${it.id} error ${i}: needs >=2 choices`);
+        else {
+          if (new Set(e.choices).size !== e.choices.length) errors.push(`${it.id} error ${i}: duplicate choices`);
+          if (typeof e.answer !== 'number' || e.answer < 0 || e.answer >= e.choices.length) errors.push(`${it.id} error ${i}: answer out of range`);
+          if (e.choices[e.answer] === actual) errors.push(`${it.id} error ${i}: correct choice equals the defective span`);
+          if (!e.choices.includes(actual)) warn.push(`${it.id} error ${i}: original span not among choices`);
+        }
+        if (!e.explanation || e.explanation.length < 20) errors.push(`${it.id} error ${i}: explanation missing/too short`);
+      }
+    }
+  }
+}
+
 // coverage: every rule needs at least one item; report counts
 const counts = {};
 const proofCovered = new Set();
 for (const it of qf.items) counts[it.ruleId] = (counts[it.ruleId] || 0) + 1;
 for (const it of fx.items) counts[it.ruleId] = (counts[it.ruleId] || 0) + 1;
 for (const it of pr.items) for (const e of it.errors) { counts[e.ruleId] = (counts[e.ruleId] || 0) + 1; proofCovered.add(e.ruleId); }
+for (const u of units) for (const it of u.items) counts[it.ruleId] = (counts[it.ruleId] || 0) + 1;
 for (const r of rulesDoc.rules) {
   if (!counts[r.id]) errors.push(`rule ${r.id}: no items at all`);
   else if (counts[r.id] < 3) warn.push(`rule ${r.id}: only ${counts[r.id]} items`);
@@ -94,7 +148,11 @@ for (const r of rulesDoc.rules) {
 const diagCount = [...qf.items, ...fx.items].filter(i => i.diagnostic).length;
 const zeroErr = pr.items.filter(p => p.errors.length === 0).length;
 
+const unitItemCount = units.reduce((a, u) => a + u.items.length, 0);
+const unitZero = units.reduce((a, u) => a + u.items.filter(i => i.type === 'spot' && !i.errors.length).length, 0);
 console.log(`content ${rulesDoc.contentVersion}: ${qf.items.length} quick-fire, ${fx.items.length} fix-it, ${pr.items.length} passages (${zeroErr} zero-error), ${rulesDoc.rules.length} rules, ${diagCount} diagnostic items`);
+console.log(`Blue Book: ${units.length} units, ${unitItemCount} items (${unitZero} already-correct sentences)`);
+console.log(`total items: ${qf.items.length + fx.items.length + pr.items.length + unitItemCount}`);
 console.log(`rules with proofreading coverage: ${proofCovered.size}/${rulesDoc.rules.length}`);
 if (warn.length) { console.log(`\nWARNINGS (${warn.length}):`); warn.forEach(w => console.log('  ⚠ ' + w)); }
 if (errors.length) { console.log(`\nERRORS (${errors.length}):`); errors.forEach(e => console.log('  ✗ ' + e)); process.exit(1); }

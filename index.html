@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Grammar">
-<link rel="stylesheet" href="./styles.css?v=2">
+<link rel="stylesheet" href="./styles.css?v=3">
 </head>
 <body>
 <div id="app" aria-live="polite">
@@ -21,7 +21,7 @@
       <h1>Grammar Chambers</h1>
       <p class="tagline">Clean prose, automatic.</p>
     </header>
-    <div class="card completion-card">
+    <div class="card completion-card" id="completion-card">
       <div class="completion-ring-wrap">
         <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
           <circle class="ring-bg" cx="60" cy="60" r="52"/>
@@ -37,6 +37,7 @@
         <div class="stat"><span id="stat-days">–</span><label>days to Aug 17</label></div>
         <div class="stat"><span id="stat-auto">–</span><label>rules automatic</label></div>
         <div class="stat"><span id="stat-passages">–</span><label>passages cleared</label></div>
+        <div class="stat"><span id="stat-units">–</span><label>book units done</label></div>
       </div>
     </div>
     <div id="diag-banner" class="card diag-banner" hidden>
@@ -74,6 +75,21 @@
       <!-- item rendered here -->
     </div>
     <div id="drill-actions" class="drill-actions"></div>
+  </section>
+
+  <!-- ============ BLUE BOOK COMPANION ============ -->
+  <section id="screen-book" class="screen" hidden>
+    <header class="screen-head">
+      <h1>The Blue Book</h1>
+      <p class="screen-sub" id="book-summary"></p>
+    </header>
+    <div class="card book-intro">
+      <p class="small">End-of-chapter exercises for <em>The Blue Book of Grammar and Punctuation</em>
+      (Kaufman &amp; Straus, 12th ed.). Same concepts, same quiz formats — all new sentences, so
+      reading the book doesn't spoil the drill. Each unit lists the pages it covers.</p>
+      <p class="small muted" id="book-housestyle-toggle"><button class="linklike" id="btn-housestyle">Where this app and the book disagree →</button></p>
+    </div>
+    <div id="unit-list"></div>
   </section>
 
   <!-- ============ MASTERY GRID ============ -->
@@ -156,6 +172,7 @@
   <!-- ============ BOTTOM NAV ============ -->
   <nav id="tabbar" class="tabbar" hidden>
     <button data-nav="home" class="tab active" aria-label="Home"><span class="tab-ico">◉</span>Home</button>
+    <button data-nav="book" class="tab" aria-label="Blue Book"><span class="tab-ico">📘</span>Book</button>
     <button data-nav="mastery" class="tab" aria-label="Mastery"><span class="tab-ico">▦</span>Mastery</button>
     <button data-nav="passages" class="tab" aria-label="Passages"><span class="tab-ico">¶</span>Passages</button>
     <button data-nav="rewards" class="tab" aria-label="Rewards"><span class="tab-ico">⌚</span>Rewards</button>

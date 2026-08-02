@@ -1,5 +1,5 @@
 {
-  "contentVersion": "2026-07-18.1",
+  "contentVersion": "2026-07-18.2",
   "categories": [
     { "id": "commas", "name": "Commas & clauses" },
     { "id": "punct", "name": "Semicolons, colons & dashes" },
@@ -11,7 +11,12 @@
     { "id": "hyph", "name": "Hyphenation" },
     { "id": "conv", "name": "Legal-writing conventions" },
     { "id": "word", "name": "Confused words" },
-    { "id": "myth", "name": "Style myths" }
+    { "id": "myth", "name": "Style myths" },
+    { "id": "parts", "name": "Sentence parts & verbs" },
+    { "id": "adjadv", "name": "Adjectives, adverbs & prepositions" },
+    { "id": "write", "name": "Effective writing" },
+    { "id": "cap", "name": "Capitalization" },
+    { "id": "num", "name": "Writing numbers" }
   ],
   "rules": [
     { "id": "COMMA.THATWHICH", "categoryId": "commas", "name": "That vs. which", "weight": 4, "authority": "convention", "summary": "Restrictive clauses take 'that' with no comma; 'which' follows a comma and adds nonessential information." },
@@ -64,6 +69,43 @@
     { "id": "MYTH.FRAGCONJ", "categoryId": "myth", "name": "And/But openers & fragments", "weight": 2, "authority": "myth", "summary": "Judicial prose freely opens sentences with And/But/So and deploys deliberate fragments — neither is an error." },
     { "id": "MYTH.SPLIT", "categoryId": "myth", "name": "Split infinitives", "weight": 1, "authority": "myth", "summary": "Splitting an infinitive is fine when it reads best; contorting to avoid one is the real error." },
     { "id": "MYTH.PREP", "categoryId": "myth", "name": "Terminal prepositions", "weight": 1, "authority": "myth", "summary": "Ending a sentence with a preposition is standard English; 'up with which I will not put' is the joke, not the rule." },
-    { "id": "MYTH.PASSIVE", "categoryId": "myth", "name": "Passive voice", "weight": 1, "authority": "myth", "summary": "The passive is a tool — right when the actor is unknown or beside the point, wrong only as a default." }
+    { "id": "MYTH.PASSIVE", "categoryId": "myth", "name": "Passive voice", "weight": 1, "authority": "myth", "summary": "The passive is a tool — right when the actor is unknown or beside the point, wrong only as a default." },
+
+    { "id": "GRAM.SUBJECT", "categoryId": "parts", "name": "Finding subjects and verbs", "weight": 3, "authority": "rule", "summary": "Find the verb, then ask who or what performed it. The subject never sits inside an 'of' phrase, and in inverted sentences it follows the verb." },
+    { "id": "GRAM.IRREGULAR", "categoryId": "parts", "name": "Irregular verbs", "weight": 2, "authority": "rule", "summary": "After a helping verb use the past participle (had gone, has taken, have written) — never the simple past." },
+    { "id": "AGREE.PORTION", "categoryId": "agree", "name": "Portions, units & quantities", "weight": 3, "authority": "rule", "summary": "Portion words (a lot, some, all, a majority, percent, fractions) take their number from the noun after 'of'; distances, periods, and sums taken as a unit stay singular." },
+    { "id": "AGREE.SUBJUNCTIVE", "categoryId": "agree", "name": "Subjunctive mood", "weight": 3, "authority": "rule", "summary": "Use 'were' for wishes and contrary-to-fact statements, and the bare verb after demands and orders ('ordered that he appear')." },
+    { "id": "PRON.SUBJOBJ", "categoryId": "pron", "name": "Subject vs. object pronouns", "weight": 4, "authority": "rule", "summary": "Remove the 'and' phrase to test: she and I went; between you and me. Objects of prepositions always take the object form." },
+    { "id": "PRON.THANAS", "categoryId": "pron", "name": "Pronouns after than and as", "weight": 2, "authority": "rule", "summary": "Finish the sentence mentally — 'faster than I [draft]' — and note that 'than me' and 'than I' can mean different things." },
+    { "id": "PRON.REFLEXIVE", "categoryId": "pron", "name": "Reflexive (-self) pronouns", "weight": 3, "authority": "rule", "summary": "Use myself only when I or me already appears in the sentence; it is never a fancy substitute for I or me." },
+    { "id": "PRON.WHOEVER", "categoryId": "pron", "name": "Whoever vs. whomever", "weight": 3, "authority": "rule", "summary": "Decide inside the pronoun's own clause: they = whoever, them = whomever — even when the whole clause follows a preposition." },
+    { "id": "ADJ.ADV", "categoryId": "adjadv", "name": "Adjectives vs. adverbs", "weight": 3, "authority": "rule", "summary": "Adjectives modify nouns; adverbs modify verbs, adjectives, and adverbs — 'answered quickly,' not 'answered quick.'" },
+    { "id": "ADJ.SENSE", "categoryId": "adjadv", "name": "Linking and sense verbs", "weight": 3, "authority": "rule", "summary": "Taste, smell, look, feel, seem take adjectives when they describe a state: feel bad, sounds persuasive, looks well (health)." },
+    { "id": "ADJ.COMPARE", "categoryId": "adjadv", "name": "Comparative vs. superlative", "weight": 3, "authority": "rule", "summary": "Two things take the comparative (more/-er); three or more take the superlative (most/-est). Don't drop -ly when comparing adverbs." },
+    { "id": "PREP.LIKEAS", "categoryId": "adjadv", "name": "Like vs. as / as if", "weight": 3, "authority": "rule", "summary": "Like means 'similar to' and takes an object; when a subject and verb follow, use as, as if, as though, or the way." },
+    { "id": "PREP.IDIOM", "categoryId": "adjadv", "name": "Preposition idioms", "weight": 2, "authority": "rule", "summary": "Cut surplus prepositions ('where is it at'), never write 'should of,' prefer different from, and use into for motion." },
+    { "id": "WRITE.ACTIVE", "categoryId": "write", "name": "Active voice & concrete language", "weight": 3, "authority": "convention", "summary": "Name the actor and the act. Reserve the passive for when the actor is unknown, obvious, or beside the point." },
+    { "id": "WRITE.EXPLETIVE", "categoryId": "write", "name": "There is / it is padding", "weight": 2, "authority": "convention", "summary": "Expletive openers bury the real subject behind the verb — and 'there's' with a plural subject is an outright error." },
+    { "id": "WRITE.DOUBLENEG", "categoryId": "write", "name": "Double negatives", "weight": 1, "authority": "convention", "summary": "Two negatives making a positive usually reads as pompous; say the positive thing." },
+    { "id": "WRITE.FRAGMENT", "categoryId": "write", "name": "Fragments & run-ons", "weight": 2, "authority": "rule", "summary": "A dependent clause alone is a fragment; two independent clauses run together need real punctuation. Deliberate fragments are style — orphaned clauses are not." },
+    { "id": "COMMA.ADJECTIVES", "categoryId": "commas", "name": "Coordinate adjectives", "weight": 2, "authority": "rule", "summary": "Comma between adjectives if you could reverse them or insert 'and': a long, tedious hearing — but a cramped federal courtroom." },
+    { "id": "COMMA.ADDRESS", "categoryId": "commas", "name": "Direct address, places & titles", "weight": 2, "authority": "convention", "summary": "Fence off names in direct address, and put a comma after the state as well as between city and state." },
+    { "id": "COMMA.QUOTE", "categoryId": "commas", "name": "Commas with quotations", "weight": 2, "authority": "rule", "summary": "Commas introduce and close quoted dialogue — inside the quotation marks — unless a question mark takes the comma's place." },
+    { "id": "PUNCT.PAREN", "categoryId": "punct", "name": "Parentheses", "weight": 2, "authority": "rule", "summary": "Period inside only if a whole sentence is inside. Parentheses aren't part of the subject, and commas follow them rather than precede them." },
+    { "id": "PUNCT.BRACKET", "categoryId": "punct", "name": "Brackets and [sic]", "weight": 3, "authority": "rule", "summary": "Brackets appear only inside quotations — to explain, to alter ('[T]he'), or to flag a source's own error with [sic]." },
+    { "id": "PUNCT.QUESTION", "categoryId": "punct", "name": "Question marks", "weight": 2, "authority": "rule", "summary": "Only direct questions take a question mark; indirect questions and most rhetorical ones take a period." },
+    { "id": "PUNCT.ELLIPSIS", "categoryId": "punct", "name": "Ellipses, exclamations & slashes", "weight": 1, "authority": "convention", "summary": "Ellipses mark omitted words from a quotation; exclamation points stay out of formal writing; the slash rarely earns its place." },
+    { "id": "APOS.CONTRACTION", "categoryId": "poss", "name": "Contractions & apostrophe marks", "weight": 2, "authority": "rule", "summary": "The apostrophe goes exactly where letters were removed — doesn't, ’08 — and it curls like a comma, not like an opening quote." },
+    { "id": "APOS.PLURALS", "categoryId": "poss", "name": "Apostrophes and plurals", "weight": 3, "authority": "rule", "summary": "Never use an apostrophe to make a noun or name plural, and beware false possessives (a Beatles song, a United States citizen)." },
+    { "id": "HYPH.PREFIX", "categoryId": "hyph", "name": "Prefixes and suffixes", "weight": 2, "authority": "convention", "summary": "Hyphenate before proper nouns and after self-, ex-, all-; use re- hyphens to prevent collisions (re-cover vs. recover)." },
+    { "id": "HYPH.NUMBER", "categoryId": "hyph", "name": "Hyphens with numbers & ages", "weight": 2, "authority": "rule", "summary": "Compound numbers twenty-one to ninety-nine and spelled-out fractions take hyphens; ages before a noun need both hyphens." },
+    { "id": "CAP.TITLES", "categoryId": "cap", "name": "Titles, offices & kinship", "weight": 3, "authority": "convention", "summary": "Capitalize a title before a name and in direct address; lowercase occupations, titles after a name, and kinship names after a possessive." },
+    { "id": "CAP.REGION", "categoryId": "cap", "name": "Regions, proper nouns & seasons", "weight": 2, "authority": "convention", "summary": "Capitalize named regions, not compass directions; seasons stay lowercase; don't capitalize 'the' before a proper noun." },
+    { "id": "CAP.COMPOSITION", "categoryId": "cap", "name": "Titles of works & courses", "weight": 2, "authority": "convention", "summary": "Capitalize first and last words plus nouns, pronouns, verbs, adjectives, and adverbs; specific course titles capitalize, general subjects don't." },
+    { "id": "NUM.SPELL", "categoryId": "num", "name": "Figures vs. spelled-out numbers", "weight": 3, "authority": "convention", "summary": "Never open a sentence with a numeral; decades spelled out stay lowercase; pick a spell-out threshold and hold it." },
+    { "id": "NUM.FORMAT", "categoryId": "num", "name": "Number formatting", "weight": 2, "authority": "convention", "summary": "Commas in four-digit-plus figures, no '$' with 'dollars,' noon and midnight over 12:00, and no redundant 'a.m. in the morning.'" },
+    { "id": "NUM.DECADES", "categoryId": "num", "name": "Decades & number plurals", "weight": 1, "authority": "convention", "summary": "Apostrophe before the omitted numerals (’90s), nothing between the number and the s (1990s)." },
+    { "id": "WORD.THEIR", "categoryId": "word", "name": "Their/there/they're & advice/advise", "weight": 3, "authority": "rule", "summary": "Their is possessive, there is a place or existence, they're is 'they are'; advice is the noun, advise the verb." },
+    { "id": "WORD.MORE", "categoryId": "word", "name": "More confused pairs", "weight": 3, "authority": "rule", "summary": "Disinterested/uninterested, flout/flaunt, tortuous/torturous, criteria/criterion, farther/further, continual/continuous, and their kin." }
   ]
 }

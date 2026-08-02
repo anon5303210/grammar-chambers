@@ -44,7 +44,7 @@ function confirmModal(title, body, okLabel, onOk, danger = false) {
 
 // ---------- navigation ----------
 
-const SCREENS = ['home', 'drill', 'mastery', 'passages', 'rewards', 'settings'];
+const SCREENS = ['home', 'drill', 'book', 'mastery', 'passages', 'rewards', 'settings'];
 
 export function show(name) {
   for (const s of SCREENS) $(`screen-${s}`).hidden = s !== name;
@@ -52,6 +52,7 @@ export function show(name) {
   document.querySelectorAll('.tab').forEach(t =>
     t.classList.toggle('active', t.dataset.nav === name));
   if (name === 'home') renderHome();
+  if (name === 'book') renderBook();
   if (name === 'mastery') renderMastery();
   if (name === 'passages') renderPassages();
   if (name === 'rewards') renderRewards();
@@ -73,6 +74,7 @@ export function renderHome() {
   $('stat-days').textContent = String(daysLeft());
   $('stat-auto').textContent = `${c.autoCount}/${c.ruleTotal}`;
   $('stat-passages').textContent = `${c.clearedP}/${c.totalP}`;
+  $('stat-units').textContent = `${c.clearedU}/${c.totalU}`;
   const note = $('est-note');
   note.hidden = false;
   note.textContent = hrs.calibrating
@@ -140,16 +142,36 @@ export function startSinglePassage(id) {
   advance();
 }
 
-function beginSession(mode) {
-  session = { mode, seen: new Set(), items: 0, correct: 0, start: Date.now(), itemStart: 0, current: null, singleId: null };
-  $('drill-mode-chip').hidden = mode !== 'diag';
+export function startUnit(unitId, restart = false) {
+  const s = load();
+  const unit = content.unitById.get(unitId);
+  if (!unit) return;
+  const st = s.units[unitId] || { attempts: 0, idx: 0, correct: 0, bestScore: 0, cleared: false };
+  if (restart || st.idx >= unit.items.length) { st.idx = 0; st.correct = 0; }
+  if (st.idx === 0) st.attempts++;
+  s.units[unitId] = st;
+  save();
+  beginSession('unit', { unitId });
+  advance();
+}
+
+function beginSession(mode, opts = {}) {
+  session = { mode, seen: new Set(), items: 0, correct: 0, start: Date.now(), itemStart: 0, current: null, singleId: null, unitId: opts.unitId || null };
+  $('drill-mode-chip').hidden = mode === 'drill' || mode === 'single';
+  if (mode === 'unit') $('drill-mode-chip').textContent = 'Blue Book';
+  else if (mode === 'diag') $('drill-mode-chip').textContent = 'Diagnostic';
   show('drill');
   updateSessionBar();
 }
 
 function updateSessionBar() {
   const s = load();
-  if (session.mode === 'diag') {
+  if (session.mode === 'unit') {
+    const unit = content.unitById.get(session.unitId);
+    const st = s.units[session.unitId];
+    $('session-count').textContent = `${unit.title} — ${Math.min(st.idx + 1, unit.items.length)} of ${unit.items.length}`;
+    $('session-correct').textContent = `${st.correct} correct`;
+  } else if (session.mode === 'diag') {
     $('session-count').textContent = `Question ${Math.min(s.diag.idx + 1, s.diag.queue.length)} of ${s.diag.queue.length}`;
     const part = Math.floor(s.diag.idx / 10) + 1;
     const parts = Math.ceil(s.diag.queue.length / 10);
@@ -178,7 +200,12 @@ function endSession(silent = false) {
 function advance() {
   const s = load();
   let item = null;
-  if (session.mode === 'diag') {
+  if (session.mode === 'unit') {
+    const unit = content.unitById.get(session.unitId);
+    const st = s.units[session.unitId];
+    if (st.idx >= unit.items.length) { finishUnit(unit, st); return; }
+    item = content.byId.get(unit.items[st.idx].id);
+  } else if (session.mode === 'diag') {
     if (s.diag.idx >= s.diag.queue.length) { finishDiagnostic(); return; }
     item = content.byId.get(s.diag.queue[s.diag.idx]);
     if (!item) { s.diag.idx++; save(); advance(); return; }
@@ -195,7 +222,42 @@ function advance() {
   updateSessionBar();
   if (item.type === 'mc') renderMC(item);
   else if (item.type === 'fixit') renderFixit(item);
-  else renderProof(item);
+  else if (item.type === 'tap') renderTap(item);
+  else renderProof(item);   // 'proof' passages and 'spot' sentences share one renderer
+}
+
+function finishUnit(unit, st) {
+  const s = load();
+  const score = Math.round((st.correct / unit.items.length) * 100);
+  st.bestScore = Math.max(st.bestScore || 0, score);
+  const nowCleared = score >= 80;
+  if (nowCleared) st.cleared = true;
+  st.idx = unit.items.length;
+  save();
+  const paid = checkMilestones();
+  const root = $('modal-root');
+  root.innerHTML = '';
+  const scrim = els('div', 'modal-scrim');
+  const m = els('div', 'modal');
+  m.appendChild(els('h3', null, nowCleared ? `${unit.title} — cleared` : `${unit.title} — ${score}%`));
+  m.appendChild(els('p', null, nowCleared
+    ? `${st.correct} of ${unit.items.length} correct. Clearing needs 80%; you're past it. Missed rules will resurface in ordinary drilling.`
+    : `${st.correct} of ${unit.items.length} correct — clearing a unit takes 80%. Run it again whenever; the misses are already queued into your review rotation.`));
+  const again = els('button', 'btn btn-primary', nowCleared ? 'Back to the book' : 'Run it again');
+  again.onclick = () => {
+    root.innerHTML = '';
+    if (nowCleared) { session = null; show('book'); }
+    else startUnit(unit.id, true);
+  };
+  m.appendChild(again);
+  if (!nowCleared) {
+    const later = els('button', 'btn btn-secondary', 'Later');
+    later.onclick = () => { root.innerHTML = ''; session = null; show('book'); };
+    m.appendChild(later);
+  }
+  scrim.appendChild(m);
+  root.appendChild(scrim);
+  for (const p of paid) toast(p, 4200);
 }
 
 function finishDiagnostic() {
@@ -228,6 +290,12 @@ function afterAnswer(item, correct) {
     const s = load();
     s.diag.idx++;
     s.diag.results.push({ id: item.id, correct });
+    save();
+  } else if (session.mode === 'unit') {
+    const s = load();
+    const st = s.units[session.unitId];
+    st.idx++;
+    if (correct) st.correct++;
     save();
   }
   updateSessionBar();
@@ -378,6 +446,38 @@ function chooseCorrection(item, body, actions, tokenSpan) {
   body.appendChild(wrap);
 }
 
+// ---------- tap-a-word (identify the subject, the verb, …) ----------
+
+function renderTap(item) {
+  const body = $('drill-body');
+  const actions = $('drill-actions');
+  body.innerHTML = ''; actions.innerHTML = '';
+  body.appendChild(els('div', 'item-rule-tag', 'Identify'));
+  body.appendChild(els('div', 'item-prompt', item.prompt));
+  const p = els('div', 'item-passage');
+  const spans = [];
+  let answered = false;
+  item.tokens.forEach((tok, i) => {
+    const span = els('span', 'tok', tok);
+    span.onclick = () => {
+      if (answered) return;
+      answered = true;
+      const correct = item.targets.includes(i);
+      span.classList.add(correct ? 'hit' : 'missed');
+      if (!correct) item.targets.forEach(t => spans[t].classList.add('hit'));
+      recordAnswer(item, correct, elapsedSeconds());
+      body.appendChild(els('div', `verdict ${correct ? 'good' : 'bad'}`, correct ? '✓ Right' : '✗ Not that one'));
+      body.appendChild(explainBlock(item));
+      actions.appendChild(nextButton());
+      afterAnswer(item, correct);
+    };
+    spans.push(span);
+    p.appendChild(span);
+    p.appendChild(document.createTextNode(joinGlue(item.tokens, i)));
+  });
+  body.appendChild(p);
+}
+
 // ---------- proofreading ----------
 
 function renderProof(item) {
@@ -386,9 +486,11 @@ function renderProof(item) {
   body.innerHTML = ''; actions.innerHTML = '';
   const s = load();
   const flags = new Set();
-  body.appendChild(els('div', 'item-rule-tag', item.title || 'Proofread'));
-  body.appendChild(els('div', 'item-prompt',
-    `Tap anything that's wrong — a word or a punctuation mark. This passage has zero to three planted errors. Flag nothing if it's clean.`));
+  const isSpot = item.type === 'spot';
+  body.appendChild(els('div', 'item-rule-tag', isSpot ? 'Correct or check' : (item.title || 'Proofread')));
+  body.appendChild(els('div', 'item-prompt', isSpot
+    ? (item.prompt || 'Correct the error — or submit with nothing flagged if the sentence is already right.')
+    : `Tap anything that's wrong — a word or a punctuation mark. This passage has zero to three planted errors. Flag nothing if it's clean.`));
   const p = els('div', 'item-passage');
   const spans = [];
   item.tokens.forEach((tok, i) => {
@@ -426,6 +528,7 @@ function errorSpanIndexes(err) {
 
 function gradeProof(item, flags, spans, body, actions) {
   const s = load();
+  const isSpot = item.type === 'spot';
   const errors = item.errors || [];
   const found = [];
   const missed = [];
@@ -450,7 +553,8 @@ function gradeProof(item, flags, spans, body, actions) {
     if (k >= found.length) { finishProof(); return; }
     const err = found[k];
     const q = els('div');
-    q.appendChild(els('div', 'item-prompt', `Fix the highlighted problem ${found.length > 1 ? `(${k + 1} of ${found.length})` : ''}: “${errorSpanIndexes(err).map(i => item.tokens[i]).join(' ')}”`));
+    const which = found.length > 1 ? ` (${k + 1} of ${found.length})` : '';
+    q.appendChild(els('div', 'item-prompt', `Fix the highlighted problem${which}: “${errorSpanIndexes(err).map(i => item.tokens[i]).join(' ')}”`));
     const wrap = els('div', 'options');
     const order = shuffled(err.choices.length);
     let done = false;
@@ -486,22 +590,30 @@ function gradeProof(item, flags, spans, body, actions) {
       recordProofRuleResult(err.ruleId, ok);
     }
     // item-level
-    recordAnswer(item, cleared, elapsedSeconds(), { inProof: true });
-    const st = s.proof[item.id] || { attempts: 0, cleared: false, bestScore: 0 };
-    st.attempts++;
-    const score = isZeroError
-      ? (cleared ? 100 : Math.max(0, 100 - flags.size * 25))
-      : Math.max(0, Math.round(100 * (corrected.length / errors.length) - falsePos.length * 10));
-    st.bestScore = Math.max(st.bestScore, score);
-    if (cleared) st.cleared = true;
-    s.proof[item.id] = st;
-    save();
+    recordAnswer(item, cleared, elapsedSeconds(), { inProof: !isSpot });
+    if (!isSpot) {
+      const st = s.proof[item.id] || { attempts: 0, cleared: false, bestScore: 0 };
+      st.attempts++;
+      const score = isZeroError
+        ? (cleared ? 100 : Math.max(0, 100 - flags.size * 25))
+        : Math.max(0, Math.round(100 * (corrected.length / errors.length) - falsePos.length * 10));
+      st.bestScore = Math.max(st.bestScore, score);
+      if (cleared) st.cleared = true;
+      s.proof[item.id] = st;
+      save();
+    }
 
     const sc = els('div', 'proof-score');
     if (isZeroError) {
       sc.innerHTML = cleared
-        ? `<b class="good">✓ Clean passage — and you left it alone.</b> That restraint is the proofreader's second skill.`
-        : `<b class="bad">This passage had no errors.</b> You flagged ${flags.size} thing${flags.size === 1 ? '' : 's'} that ${flags.size === 1 ? 'was' : 'were'} fine. Knowing when not to edit is half the job.`;
+        ? `<b class="good">✓ Clean${isSpot ? ' sentence' : ' passage'} — and you left it alone.</b> That restraint is the proofreader's second skill.`
+        : `<b class="bad">This ${isSpot ? 'sentence' : 'passage'} had no errors.</b> You flagged ${flags.size} thing${flags.size === 1 ? '' : 's'} that ${flags.size === 1 ? 'was' : 'were'} fine. Knowing when not to edit is half the job.`;
+    } else if (isSpot) {
+      sc.innerHTML = cleared
+        ? `<b class="good">✓ Found it and fixed it.</b>`
+        : (corrected.length
+            ? `<b class="bad">Right spot, wrong fix.</b>`
+            : `<b class="bad">Missed — the error is highlighted above.</b>`);
     } else {
       sc.innerHTML =
         `<b class="${cleared ? 'good' : 'bad'}">${cleared ? '✓ Passage cleared' : 'Not cleared yet'}</b> — ` +
@@ -524,6 +636,102 @@ function gradeProof(item, flags, spans, body, actions) {
 
   if (found.length) doCorrection(0);
   else finishProof();
+}
+
+// ---------- Blue Book companion ----------
+
+const HOUSE_STYLE_NOTES = [
+  ['Serial comma', 'The book says newspapers often drop it. Judicial writing does not — every opinion in the corpus uses it, so the drills require it.'],
+  ['Possessive of a singular name ending in s', 'The book says pick a formula and stay consistent (Jones’ or Jones’s). Judge Grant and the current Supreme Court write Jones’s, Congress’s, the Corps’s — so that is what the drills mark correct.'],
+  ['Em dash spacing', 'The book notes some publishers put spaces around dashes. The corpus never does, so the drills use closed dashes: word—word.'],
+  ['Capital after a colon', 'The book says authorities are divided when a full sentence follows. Recent Supreme Court practice capitalizes, and so does this app.'],
+  ['Numbers', 'The book presents AP (spell out zero–nine) and Chicago (zero–one hundred) as equally legitimate. The corpus follows the Chicago-style practice and writes “percent” as a word.'],
+  ['Singular they', 'The 12th edition accepts it where rewriting isn’t practical. Judicial practice varies by author, so this app never grades it right or wrong.'],
+  ['“That” vs. “which”', 'The book calls the distinction a useful guideline, not a hard rule. In chambers it is effectively a rule — no restrictive “which” appears anywhere in the Grant corpus — so the drills enforce it.'],
+];
+
+function renderBook() {
+  const s = load();
+  const c = completion();
+  $('book-summary').textContent =
+    `${c.clearedU} of ${c.totalU} units cleared · clearing all of them is 15% of your completion bar`;
+  const list = $('unit-list');
+  list.innerHTML = '';
+  let lastChapter = null;
+  for (const u of content.units) {
+    if (u.chapter !== lastChapter) {
+      lastChapter = u.chapter;
+      list.appendChild(els('h2', 'unit-chapter', u.chapter));
+    }
+    const st = s.units[u.id];
+    const row = els('div', 'unit-item');
+    const left = els('div', 'unit-main');
+    left.appendChild(els('div', 'unit-title', u.title));
+    const meta = st?.cleared
+      ? `${u.items.length} questions · best ${st.bestScore}%`
+      : st?.idx
+        ? `${u.items.length} questions · paused at ${st.idx}`
+        : `${u.items.length} questions · book pp. ${u.bookPages}`;
+    left.appendChild(els('div', 'unit-meta', meta));
+    row.appendChild(left);
+    const badge = els('span', `pass-badge ${st?.cleared ? 'cleared' : ''}`,
+      st?.cleared ? 'Cleared' : st?.idx ? 'Resume' : 'Start');
+    row.appendChild(badge);
+    row.onclick = () => openUnit(u.id);
+    list.appendChild(row);
+  }
+}
+
+function openUnit(unitId) {
+  const s = load();
+  const u = content.unitById.get(unitId);
+  const st = s.units[unitId];
+  const root = $('modal-root');
+  root.innerHTML = '';
+  const scrim = els('div', 'modal-scrim');
+  const m = els('div', 'modal');
+  m.appendChild(els('h3', null, u.title));
+  m.appendChild(els('p', 'unit-pages', `${u.chapter} · Blue Book pp. ${u.bookPages}`));
+  m.appendChild(els('p', null, u.recap));
+  const inProgress = st && st.idx > 0 && st.idx < u.items.length;
+  const go = els('button', 'btn btn-primary', inProgress ? `Resume at ${st.idx + 1}` : `Start — ${u.items.length} questions`);
+  go.onclick = () => { root.innerHTML = ''; startUnit(unitId, false); };
+  m.appendChild(go);
+  if (inProgress || st?.cleared) {
+    const restart = els('button', 'btn btn-secondary', 'Start over');
+    restart.onclick = () => { root.innerHTML = ''; startUnit(unitId, true); };
+    m.appendChild(restart);
+  }
+  const cancel = els('button', 'btn btn-secondary', 'Close');
+  cancel.onclick = () => { root.innerHTML = ''; };
+  m.appendChild(cancel);
+  scrim.appendChild(m);
+  root.appendChild(scrim);
+}
+
+function showHouseStyle() {
+  const root = $('modal-root');
+  root.innerHTML = '';
+  const scrim = els('div', 'modal-scrim');
+  const m = els('div', 'modal');
+  m.appendChild(els('h3', null, 'Where this app and the book disagree'));
+  m.appendChild(els('p', null,
+    'The Blue Book is written for all American English. This app is tuned to federal judicial writing, so on a few points it enforces the narrower chambers practice. Neither source is wrong — but in a bench memo, follow the right-hand column.'));
+  const ul = els('ul', 'plain-list small');
+  for (const [topic, note] of HOUSE_STYLE_NOTES) {
+    const li = els('li');
+    const d = els('div');
+    d.appendChild(els('strong', null, topic));
+    d.appendChild(els('div', 'muted', note));
+    li.appendChild(d);
+    ul.appendChild(li);
+  }
+  m.appendChild(ul);
+  const ok = els('button', 'btn btn-primary', 'Got it');
+  ok.onclick = () => { root.innerHTML = ''; };
+  m.appendChild(ok);
+  scrim.appendChild(m);
+  root.appendChild(scrim);
 }
 
 // ---------- mastery ----------
@@ -601,8 +809,10 @@ function renderRewards() {
   const rows = [
     [`Qualified session (10+ questions, 5+ min; max 2/day)`, `$${s.settings.rwSession}`],
     [`Finish the diagnostic`, `$${s.settings.rwDiagnostic}`],
+    [`Clear a Blue Book unit (80%+)`, `$${s.settings.rwUnit}`],
     [`Master a whole category`, `$${s.settings.rwCategory}`],
     [`Clear every proofreading passage`, `$${s.settings.rwAllPassages}`],
+    [`Clear every Blue Book unit`, `$${s.settings.rwAllUnits}`],
     [`Reach 100% before Aug 17`, `fund topped to $${s.settings.watchBudget}`],
   ];
   for (const [a, b] of rows) {
@@ -649,6 +859,8 @@ export function wireEvents() {
   document.querySelectorAll('.tab').forEach(t => { t.onclick = () => show(t.dataset.nav); });
   $('btn-drill').onclick = () => startDrill();
   $('btn-diagnostic').onclick = () => startDiagnostic();
+  $('btn-housestyle').onclick = () => showHouseStyle();
+  $('completion-card').onclick = () => show('mastery');
   $('btn-exit-drill').onclick = () => endSession();
   $('set-font').onchange = (e) => { const s = load(); s.settings.fontScale = e.target.value; save(); applyDisplaySettings(); };
   $('set-theme').onchange = (e) => { const s = load(); s.settings.theme = e.target.value; save(); applyDisplaySettings(); };

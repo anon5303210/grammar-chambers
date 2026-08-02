@@ -1,9 +1,10 @@
 // Minimal service worker: cache-first for app shell + content, network-refresh in background.
-const CACHE = 'gc-v2';
+const CACHE = 'gc-v3';
 const ASSETS = [
-  './', './index.html', './styles.css?v=2', './manifest.webmanifest',
+  './', './index.html', './styles.css?v=3', './manifest.webmanifest',
   './js/main.js', './js/ui.js', './js/engine.js', './js/content.js', './js/store.js',
   './data/rules.json', './data/quick-fire.json', './data/fix-it.json', './data/proofreading.json',
+  './data/bb-grammar.json', './data/bb-punctuation.json', './data/bb-capnum.json', './data/bb-words.json',
   './icons/icon.svg',
 ];
 
